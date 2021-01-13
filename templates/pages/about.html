@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block head_title %}
+About Section
+{% endblock head_title%}
+
+
+
+
+{% block content %}
+
+<div class='row text-center'>
+    <div class='col'>
+        <h1>About Me</h1>
+    </div>
+</div>
+</br></br>
+<div class="embed-responsive embed-responsive-16by9">
+    <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/=zlexP0hIprg&t=3s" allowfullscreen></iframe>
+  </div>
+</br></br>
+  <div class='row mb-3'>
+      <div class='col-md-4 mx-auto col-10'>
+          <form class='form' id='post-create-form' method='POST' action='/create-post'>
+              {% csrf_token %}
+              <div class='d-none alert alert-danger' id='post-create-form-error'></div>
+              <input type='hidden' value='/' name='next' />
+              <textarea required='required' class='form-control' name='content' placeholder='Leave a comment...'></textarea>
+              <button type='submit' class='btn btn-primary'>post</button>
+          </form>
+      </div>
+  </div>
+ <div class='row' id='posts'>
+    Coming soon...
+</div>
+</br></br>
+
+<script>
+const postsElement = document.getElementById("posts") // get html element
+//postsElement.innerHTML = 'loading...' //set html element
+//replace youtube link: https://www.youtube.com/watch?v=zlexP0hIprg
+
+const xhr = new XMLHttpRequest()
+const method = 'GET' // "POST"
+const url = "/posts"
+const responseType = "json"
+
+
+function handleDidLike (post_id, currentCount) {
+    console.log(post_id, currentCount)
+    return 
+}
+
+function handleDidDisLike (post_id, currentCount) {
+    console.log(post_id, currentCount)
+    return 
+}
+
+function LikeBtn(post) {
+    return "<button class='btn btn-primary btn-sm' onclick=handleDidLike(" + 
+    post.id + "," + post.likes + ")>" + post.likes + " +</button>"
+}
+
+function DislikeBtn(post) {
+    return "<button class='btn btn-danger btn-sm' onclick=handleDidDislike(" + 
+    post.id + "," + post.dislikes + ")>" + post.dislikes + " -</button>"
+}
+
+function formatPostElement(post) {
+    var formattedPost = "<div class='col-12 col-md-10 mx-auto border rounded py-3 mb-4 post' id='post-" + post.id 
+    + "'><p>" + post.content + 
+        "</p><div class='btns'>" + LikeBtn(post) +
+        "</div>" + "<div class='btns'>" + DislikeBtn(post) +
+        "</div></div>"
+    return formattedPost
+}
+xhr.responseType = responseType
+xhr.open(method, url)
+xhr.onload = function() {
+    const serverResponse = xhr.response
+    const listedItems = serverResponse.response // array
+    var finalPostStr = ""
+    var i;
+    for (i=0;i<listedItems.length; i++) {
+        var postObj = listedItems[i]
+        var currentItem = formatPostElement(postObj)
+        finalPostStr += currentItem
+    }
+    postsElement.innerHTML = finalPostStr
+}
+xhr.send()
+
+
+</script>
+{% endblock content %}
+
