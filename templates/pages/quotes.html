@@ -7,12 +7,16 @@
 	{{ ticker }}
 {% endif %}
 
+
 {% if api %}
-	{% if api == "Error..." %}
-		There was a problem with your ticker symbol, please try again...
-	{% else %}
-	{% load humanize %}
-		<h1>{{ api.companyName }}</h1><br/>
+<div class="jumbotron">
+		{% if api == "Error..." %}
+			<h2>There was a problem with your ticker symbol, please try again...</h2>
+		{% else %}
+		{% load humanize %}
+
+  <p class="lead">
+		<h1>{{ api.companyName }}</h1>
 		Price: ${{ api.latestPrice|intcomma }}<br/>
 		Previous Close: ${{ api.previousClose|intcomma }}<br/>
 		PE Ratio: {{ api.peRatio|intcomma }}<br/>
@@ -20,8 +24,17 @@
 		YTD Change: {{ api.ytdChange }}<br/>
 		52Wk High: ${{ api.week52High|intcomma }}<br/>
 		52 Wk Low: ${{ api.week52Low|intcomma }}<br/>
+<br/>
+		<h3> Add Stock to Porfolio: </h3>
+	</p>
+  
+  <form action="{% url 'add_stock' %}" class="form-inline my-2 my-lg-0" method="POST">
+    {% csrf_token %}
+    <input class="form-control mr-sm-2" type="search" placeholder="Confirm Ticker" aria-label="Search" name="ticker">
+    <button class="btn btn-outline-secondary my-2 my-sm-0" type="submit">Add Stock</button>
+  </form>
+</div>
 
-		
 
 	{% endif %}
 {% endif %}

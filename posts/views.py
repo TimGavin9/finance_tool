@@ -142,7 +142,7 @@ def quotes_home_view(request):
     else:
         return render(request, 'pages/quotes.html', {'ticker': "Enter a Ticker Symbol Above^"})
 
-    #return render(request, 'pages/quotes.html', {'api':api})
+
 
 def add_stock_view(request, *args, **kwargs):
     import requests
@@ -181,3 +181,13 @@ def delete_view(request, stock_id):
 def delete_stock_view(request):
 	ticker = Stock.objects.all()
 	return render(request, 'pages/delete_stock.html', {'ticker': ticker})
+
+
+def crypto_view(request, *args, **kwargs):
+    import requests
+    import json
+    price_request = requests.get("https://min-api.cryptocompare.com/data/pricemultifull?fsyms=BTC,ETH,USDT,XRP,DOT,LTC,ADA,BCH,XLM,LINK&tsyms=USD&api_key={0cea649a1f01fce70095f810a832bbbfb9327072019b898bd73ca71463c4fe67}")
+    price = json.loads(price_request.content)
+    return render(request, 'pages/crypto_view.html', {'price': price})
+
+
